@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Lista de Tarefas</title>
+</head>
+
+<body>
+
+    <div class="principal">
+        <div class="container">
+            <h1> Minha Lista de tarefas Jhonny</h1>
+            <div class="input-group">
+                <input type="text" id="textoInput" placeholder="Digite uma nova tarefa">
+                <button  onclick= "addTexto()"> Adicionar </button> <!--addTareda chama a função do javaScript -->
+                
+            </div>
+            <h2>Pendentes</h2>
+            <ul id="listaPendente"></ul>
+            <h2>Concluídas</h2>
+            <ul id="listaCompletados"></ul>
+        </div>
+        <div class="contador">
+            <h3>Total de Tarefas:</h3>
+            <p> Total de Tarefas <span id="pushClick">0</span></p>
+            <p>Pendentes: <span id="contPendentes">0</span></p>
+            <p>Concluídas: <span id="contConcluidas">0</span></p>
+        </div>
+        
+    </div>
+    
+
+    <script src="index.js"></script>
+
+</body>
+
+</html>

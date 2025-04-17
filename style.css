@@ -1,0 +1,123 @@
+/* Define o estilo geral do corpo da página */
+body {
+	font-family: Arial, sans-serif;  /* Usa uma fonte limpa e legível */
+	background: #1c1e21;             /* Um cinza bem claro como fundo */
+	margin: 0;                       /* Remove espaçamento externo padrão */
+	padding: 20px;                   /* Adiciona um espaçamento interno */
+  }
+  
+  /* Estilo do título principal e subtítulos */
+  h1, h2 {
+	text-align: center;  /* Centraliza os títulos */
+	color: #333;         /* Cor cinza escura para bom contraste */
+  }
+  
+  /* Container principal da aplicação (área branca central) */
+  .container {
+	max-width: 700px;               /* Limita a largura máxima */
+	margin: auto;                   /* Centraliza horizontalmente */
+	background: rgb(197, 191, 191);             /* Fundo branco para contraste com o fundo cinza */
+	padding: 20px;                 /* Espaçamento interno */
+	border-radius: 10px;          /* Cantos arredondados */
+	box-shadow: 0 2px 10px rgba(0,0,0,0.1);  /* Sombra leve para dar profundidade */
+	
+	
+  }
+  
+  /* Grupo de input + botão */
+  .input-group {
+	display: flex;      /* Coloca os elementos lado a lado */
+	justify-content: center;
+	gap: 10px;          /* Espaçamento entre os elementos */
+  }
+  
+  /* Campo de texto onde o usuário digita a tarefa */
+  input[type="text"] {
+	flex: 1;                      /* Ocupa o maior espaço possível */
+	padding: 10px;                /* Espaço interno */
+	border: 1px solid #ccc;       /* Borda cinza clara */
+	border-radius: 5px;           /* Cantos arredondados */
+  }
+  
+  /* Botões em geral (como "Adicionar", "Concluir", etc.) */
+  button {
+	padding: 10px 15px;           /* Espaçamento interno */
+	background-color: #4CAF50;    /* Verde padrão */
+	color: white;                 /* Texto branco */
+	border: none;                 /* Sem borda */
+	border-radius: 5px;           /* Cantos arredondados */
+	cursor: pointer;              /* Muda cursor para "mãozinha" */
+  }
+  
+  /* Listas de tarefas (pendentes e concluídas) */
+  ul {
+	list-style: none;   /* Remove os marcadores de lista padrão */
+	padding: 0;
+	margin-top: 10px;
+  }
+  
+  /* Estilo de cada item da lista */
+  li {
+	padding: 10px;                   /* Espaçamento interno */
+	border-bottom: 1px solid #eee;  /* Linha cinza clara entre tarefas */
+	display: flex;                  /* Coloca o texto e botões lado a lado */
+	justify-content: space-between;/* Um de cada lado */
+	align-items: center;           /* Centraliza verticalmente */
+  }
+  
+  /* Estilo aplicado à tarefa quando ela for concluída */
+  li.completed {
+	text-decoration: line-through;  /* Risco sobre o texto */
+	color: #888;                    /* Cor cinza apagada */
+  }
+  
+  /* Estilo da marca de hora da conclusão */
+  .timestamp {
+	font-size: 0.8em;     /* Tamanho de fonte menor */
+	color: #999;          /* Cor cinza clara */
+	margin-left: 10px;    /* Espaço à esquerda */
+  }
+  
+  /* Container dos botões dentro de cada tarefa */
+  .actions {
+	display: flex;    /* Deixa os botões lado a lado */
+	gap: 10px;        /* Espaço entre eles */
+  }
+  
+  /* Botões dentro da div .actions (herdam estilo base do button, mas podem ser personalizados) */
+  .actions button {
+	background-color: #e74c3c; /* Cor vermelha para botão de apagar */
+	padding: 5px 10px;         /* Menor que o botão "Adicionar" */
+	font-size: 0.8em;          /* Texto menor */
+  }
+  
+  /* Botão específico de concluir tarefa */
+  .actions .complete-btn {
+	background-color: #3498db; /* Azul para indicar ação */
+  }
+  
+  /* Botão de recuperar tarefa (nas tarefas concluídas) */
+  .recover-btn {
+	background-color: #f39c12; /* Cor laranja para chamar atenção */
+  }
+  
+
+
+  /* Container principal da aplicação (área branca central) */
+  .contador {
+	width: 230px;
+	height: 150px;
+	background: rgb(197, 191, 191);
+	padding: 20px;
+	border-radius: 10px;
+
+	text-align: left;
+	font-weight: bold;
+  }
+
+  .principal {
+	display: flex; /* Coloca as divs lado a lado */
+	justify-content: center;
+	gap: 20px; /* Espaço entre container e contador */
+	flex-wrap: wrap; /* Para quebrar em telas menores */
+  }
