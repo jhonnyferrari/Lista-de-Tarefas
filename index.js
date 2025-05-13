@@ -1,132 +1,140 @@
-// Função principal para adicionar uma nova tarefa (ou reutilizar texto ao recuperar)
+var arrayTarefa = []; // Array que armazena as tarefas em memória
+
+// Função para salvar as tarefas no localStorage do navegador
+function salvarNoLocalStorage() {
+  localStorage.setItem('tarefas', JSON.stringify(arrayTarefa)); // Converte o array para string JSON e salva
+}
+
+// Função para carregar as tarefas salvas do localStorage ao iniciar a página
+function carregarDoLocalStorage() {
+  const tarefasSalvas = JSON.parse(localStorage.getItem('tarefas')) || []; // Recupera e converte para array, ou vazio se não existir
+  arrayTarefa = tarefasSalvas; // Atualiza a variável global com os dados salvos
+  tarefasSalvas.forEach(tarefa => addTexto(tarefa.tarefa)); // Adiciona cada tarefa de volta na tela
+}
+
+// Função principal para adicionar uma nova tarefa ou exibir uma existente (caso receba texto)
 function addTexto(text = null) {
-  // Pega o campo de input do HTML
-  const input = document.getElementById('textoInput');
+  const input = document.getElementById('textoInput'); // Pega o campo de input
+  const taskText = text || input.value.trim(); // Usa o texto do argumento ou o valor digitado
 
-  // Define o texto da tarefa (pode vir do input ou ser passado como argumento ao recuperar)
-  const taskText = text || input.value.trim();
+  if (taskText === '') return; // Se estiver vazio, não faz nada
 
-  // Se estiver vazio, não adiciona nada
-  if (taskText === '') return;
+  const listaTarefa = {
+    tarefa: taskText // Cria objeto da tarefa
+  };
+  arrayTarefa.push(listaTarefa); // Adiciona no array de tarefas
+  salvarNoLocalStorage(); // Salva no localStorage
 
-  // Cria o elemento <li> que vai conter a tarefa
-  const li = document.createElement('li');
+  const li = document.createElement('li'); // Cria item de lista
+  const spanText = document.createElement('span'); // Cria o texto da tarefa
+  spanText.textContent = taskText; // Define o conteúdo de texto
 
-  // Cria o elemento <span> com o texto da tarefa
-  const spanText = document.createElement('span');
-  spanText.textContent = taskText;
+  const actions = document.createElement('div'); // Cria container para botões
+  actions.classList.add('actions'); // Adiciona classe CSS
 
-  // Cria a div que vai conter os botões de ação
-  const actions = document.createElement('div');
-  actions.classList.add('actions');
-
-  // Botão de concluir tarefa
-  const completeBtn = document.createElement('button');
+  const completeBtn = document.createElement('button'); // Botão de concluir
   completeBtn.textContent = 'Concluir';
   completeBtn.classList.add('complete-btn');
-  completeBtn.onclick = () => completeTask(li, spanText); // Chama função ao clicar
+  completeBtn.onclick = () => completeTask(li, spanText); // Ao clicar, chama função de concluir
 
-  // Botão de apagar tarefa
-  const deleteBtn = document.createElement('button');
+  const deleteBtn = document.createElement('button'); // Botão de apagar
   deleteBtn.textContent = 'Apagar';
   deleteBtn.onclick = () => {
-    li.remove(); // Remove o <li> da tela
-    atualizarContador();
+    li.remove(); // Remove visualmente da lista
+    arrayTarefa = arrayTarefa.filter(t => t.tarefa !== taskText); // Remove do array
+    salvarNoLocalStorage(); // Atualiza localStorage
+    atualizarContador(); // Atualiza o contador
   };
 
+  actions.appendChild(completeBtn); // Adiciona botão de concluir
+  actions.appendChild(deleteBtn);   // Adiciona botão de apagar
 
-  // Adiciona os botões dentro da div de ações
-  actions.appendChild(completeBtn);
-  actions.appendChild(deleteBtn);
+  li.appendChild(spanText); // Adiciona texto à tarefa
+  li.appendChild(actions);  // Adiciona botões à tarefa
 
-  // Adiciona o texto e os botões ao <li>
-  li.appendChild(spanText);
-  li.appendChild(actions);
+  document.getElementById('listaPendente').appendChild(li); // Adiciona o item na lista de pendentes
 
-  // Coloca o <li> na lista de tarefas pendentes
-  document.getElementById('listaPendente').appendChild(li);
-
-  // Limpa o campo de input, caso não seja uma recuperação
-  if (!text) input.value = '';
-  atualizarContador();
+  if (!text) input.value = ''; // Limpa o input se foi digitado manualmente
+  atualizarContador(); // Atualiza os contadores
 }
 
 // Função chamada ao concluir uma tarefa
 function completeTask(li, spanText) {
-  // Pega a hora atual
-  const now = new Date();
-  const timeString = now.toLocaleTimeString('pt-BR'); // Formata como hora brasileira
+  const now = new Date(); // Pega hora atual
+  const timeString = now.toLocaleTimeString('pt-BR'); // Formata como hora BR
 
-  // Adiciona a classe para estilizar como "concluída"
-  li.classList.add('completed');
+  li.classList.add('completed'); // Adiciona estilo de concluído
 
-  // Cria o <span> que vai mostrar a hora da conclusão
-  const timestamp = document.createElement('span');
+  const timestamp = document.createElement('span'); // Cria o horário
   timestamp.classList.add('timestamp');
-  timestamp.textContent = `Concluída às ${timeString}`;
+  timestamp.textContent = `Concluída às ${timeString}`; // Mostra horário
 
-  // Cria uma nova div de ações (agora com botão de recuperar)
-  const actions = document.createElement('div');
+  const actions = document.createElement('div'); // Container de botões
   actions.classList.add('actions');
 
-  // Botão para recuperar a tarefa concluída
-  const recoverBtn = document.createElement('button');
+  const recoverBtn = document.createElement('button'); // Botão de recuperar
   recoverBtn.textContent = 'Recuperar';
   recoverBtn.classList.add('recover-btn');
-  recoverBtn.onclick = () => recoverTask(li, spanText.textContent);
+  recoverBtn.onclick = () => recoverTask(li, spanText.textContent); // Ao clicar, chama função de recuperação
 
-  // Botão para apagar tarefa (igual ao anterior)
-  const deleteBtn = document.createElement('button');
+  const deleteBtn = document.createElement('button'); // Botão de apagar
   deleteBtn.textContent = 'Apagar';
   deleteBtn.onclick = () => {
-    li.remove();
-    atualizarContador();
+    li.remove(); // Remove da tela
+    arrayTarefa = arrayTarefa.filter(t => t.tarefa !== spanText.textContent); // Remove do array
+    salvarNoLocalStorage(); // Atualiza localStorage
+    atualizarContador(); // Atualiza contador
   };
-  // Adiciona os dois botões à div de ações
-  actions.appendChild(recoverBtn);
-  actions.appendChild(deleteBtn);
 
-  // Limpa o conteúdo anterior do <li> e adiciona os novos elementos
-  li.innerHTML = '';
-  li.appendChild(spanText);
-  li.appendChild(timestamp);
-  li.appendChild(actions);
+  actions.appendChild(recoverBtn); // Adiciona botão de recuperar
+  actions.appendChild(deleteBtn);  // Adiciona botão de apagar
 
-  // Move o <li> para a lista de tarefas concluídas
-  document.getElementById('listaCompletados').appendChild(li);
-  atualizarContador();
+  li.innerHTML = ''; // Limpa conteúdo atual do item
+  li.appendChild(spanText);   // Adiciona texto
+  li.appendChild(timestamp);  // Adiciona horário
+  li.appendChild(actions);    // Adiciona os botões
+
+  document.getElementById('listaCompletados').appendChild(li); // Move para lista de concluídas
+  atualizarContador(); // Atualiza os contadores
 }
 
-// Função para recuperar uma tarefa concluída e voltar pra lista de pendentes
+// Função para recuperar tarefa concluída de volta para lista pendente
 function recoverTask(li, text) {
-  li.remove();       // Remove o <li> da lista de tarefas concluídas
-  addTexto(text);     // Chama novamente addTask() com o texto original da tarefa
-  atualizarContador();
-
+  li.remove(); // Remove da lista concluída
+  addTexto(text); // Reinsere como pendente
+  atualizarContador(); // Atualiza contadores
 }
 
+// Atualiza os números exibidos na tela
+function atualizarContador() {
+  const pendentes = document.querySelectorAll('#listaPendente li').length; // Conta pendentes
+  const concluidas = document.querySelectorAll('#listaCompletados li').length; // Conta concluídas
+
+  let pushTotal = pendentes + concluidas; // Soma total
+
+  document.getElementById('contPendentes').textContent = pendentes; // Mostra pendentes
+  document.getElementById('contConcluidas').textContent = concluidas; // Mostra concluídas
+  document.getElementById('pushClick').textContent = pushTotal; // Mostra total
+}
+
+// Quando a página carregar, executa a função para recuperar as tarefas salvas
+window.onload = () => {
+  carregarDoLocalStorage(); // Carrega tarefas do localStorage
+};
 
 
-function atualizarContador() { //Define uma nova função chamada atualizarContador.
-  //   Ela será responsável por contar as tarefas pendentes e concluídas, e atualizar os números mostrados na tela.
+function deletarTudo() {
+  // Limpa o armazenamento local
+  localStorage.removeItem('tarefas');
 
+  // Limpa o array em memória
+  arrayTarefa = [];
 
+  // Remove os itens da lista visual
+  document.getElementById('listaPendente').innerHTML = '';
+  document.getElementById('listaCompletados').innerHTML = '';
 
-  const pendentes = document.querySelectorAll('#listaPendente li').length;// Seleciona todos os <li> (itens da lista) dentro da 
-  // <ul id="listaPendente li"> dentro do HTML - OBS: la vai estar com o nome listaPendente, este li tem que coloca no js para ele contar
-  // Usa document.querySelectorAll(...) para pegar todos os elementos que representam tarefas pendentes.
-  // .length conta quantos itens foram encontrados, e o resultado é armazenado na variável pendentes.
-  const concluidas = document.querySelectorAll('#listaCompletados li').length;
-
-  let pushTotal = pendentes + concluidas;
-
-
-  document.getElementById('contPendentes').textContent = pendentes;//Atualiza o conteúdo da <span id="contPendentes"> no HTML
-  // O número de tarefas pendentes (pendentes) é convertido para texto e exibido na tela.
-
-  document.getElementById('contConcluidas').textContent = concluidas;
-
-  document.getElementById('pushClick').textContent = pushTotal;
-
+  // Atualiza os contadores para zero
+  atualizarContador();
 }
 
